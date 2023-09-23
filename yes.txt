@@ -1,0 +1,71 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+std::string encrypt(const std::string& password) {
+    std::string encryptedPassword = password;
+    for (int i = 0; i < encryptedPassword.length(); i++) {
+        encryptedPassword[i] = password[i] + i + 1 + 3;
+    }
+    std::swap(encryptedPassword[0], encryptedPassword[encryptedPassword.length() - 1]);
+    std::reverse(encryptedPassword.begin(), encryptedPassword.end());
+    return encryptedPassword;
+}
+
+std::string decrypt(const std::string& encryptedPassword) {
+    std::string decryptedPassword = encryptedPassword;
+    std::reverse(decryptedPassword.begin(), decryptedPassword.end());
+    std::swap(decryptedPassword[0], decryptedPassword[decryptedPassword.length() - 1]);
+    for (int i = 0; i < decryptedPassword.length(); i++) {
+        decryptedPassword[i] = encryptedPassword[i] - i - 1 - 3;
+    }
+    return decryptedPassword;
+}
+
+bool isStrongPassword(const std::string& password) {
+    if (password.length() < 8)
+        return false;
+    bool hasDigit = false;
+    bool hasUpperCase = false;
+    bool hasLowerCase = false;
+    for (char c : password) {
+        if (isdigit(c))
+            hasDigit = true;
+        else if (isupper(c))
+            hasUpperCase = true;
+        else if (islower(c))
+            hasLowerCase = true;
+    }
+    return hasDigit && hasUpperCase && hasLowerCase;
+}
+
+std::string generatePassword() {
+    std::string password;
+    std::string allowedChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    int length = 16;
+    for (int i = 0; i < length; i++) {
+        int randomIndex = rand() % allowedChars.length();
+        password += allowedChars[randomIndex];
+    }
+    return password;
+}
+
+int main() {
+    std::string password;
+    std::cout << "Enter a password: ";
+    std::cin >> password;
+
+    std::string encryptedPassword = encrypt(password);
+    std::cout << "Encrypted password: " << encryptedPassword << std::endl;
+
+    std::string decryptedPassword = decrypt(encryptedPassword);
+    std::cout << "Decrypted password: " << decryptedPassword << std::endl;
+
+    bool isStrong = isStrongPassword(password);
+    std::cout << "Is password strong? " << (isStrong ? "Yes" : "No") << std::endl;
+
+    std::string generatedPassword = generatePassword();
+    std::cout << "Generated password: " << generatedPassword << std::endl;
+
+    return 0;
+}
