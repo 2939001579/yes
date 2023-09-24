@@ -5,67 +5,47 @@
 std::string encrypt(const std::string& password) {
     std::string encryptedPassword = password;
     for (int i = 0; i < encryptedPassword.length(); i++) {
-        encryptedPassword[i] = password[i] + i + 1 + 3;
+        encryptedPassword[i] = password[i] + i + 1 + 3;  // 对每个字符进行加密，加密规则为字符的ASCII值加上索引值加上4
     }
-    std::swap(encryptedPassword[0], encryptedPassword[encryptedPassword.length() - 1]);
-    std::reverse(encryptedPassword.begin(), encryptedPassword.end());
-    return encryptedPassword;
+    std::swap(encryptedPassword[0], encryptedPassword[encryptedPassword.length() - 1]);  // 交换第一个字符和最后一个字符的位置
+    std::reverse(encryptedPassword.begin(), encryptedPassword.end());  // 对字符进行逆序操作
+    return encryptedPassword;  // 返回加密后的密码
 }
 
 std::string decrypt(const std::string& encryptedPassword) {
     std::string decryptedPassword = encryptedPassword;
-    std::reverse(decryptedPassword.begin(), decryptedPassword.end());
-    std::swap(decryptedPassword[0], decryptedPassword[decryptedPassword.length() - 1]);
+    std::reverse(decryptedPassword.begin(), decryptedPassword.end());  // 对字符进行逆序操作
+    std::swap(decryptedPassword[0], decryptedPassword[decryptedPassword.length() - 1]);  // 交换第一个字符和最后一个字符的位置
     for (int i = 0; i < decryptedPassword.length(); i++) {
-        decryptedPassword[i] = encryptedPassword[i] - i - 1 - 3;
+        decryptedPassword[i] = encryptedPassword[i] - i - 1 - 3;  // 对每个字符进行解密，解密规则为字符的ASCII值减去索引值减去4
     }
-    return decryptedPassword;
+    return decryptedPassword;  // 返回解密后的密码
 }
 
 bool isStrongPassword(const std::string& password) {
-    if (password.length() < 8)
+    if (password.length() < 8)  // 如果密码长度小于8，返回false
         return false;
-    bool hasDigit = false;
-    bool hasUpperCase = false;
-    bool hasLowerCase = false;
+    bool hasDigit = false;  // 是否包含数字
+    bool hasUpperCase = false;  // 是否包含大写字母
+    bool hasLowerCase = false;  // 是否包含小写字母
     for (char c : password) {
-        if (isdigit(c))
+        if (isdigit(c))  // 判断字符是否是数字
             hasDigit = true;
-        else if (isupper(c))
+        else if (isupper(c))  // 判断字符是否是大写字母
             hasUpperCase = true;
-        else if (islower(c))
+        else if (islower(c))  // 判断字符是否是小写字母
             hasLowerCase = true;
     }
-    return hasDigit && hasUpperCase && hasLowerCase;
+    return hasDigit && hasUpperCase && hasLowerCase;  // 当同时包含数字、大写字母、小写字母时返回true，否则返回false
 }
 
 std::string generatePassword() {
     std::string password;
-    std::string allowedChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    int length = 16;
-    for (int i = 0; i < length; i++) {
-        int randomIndex = rand() % allowedChars.length();
-        password += allowedChars[randomIndex];
+    std::string allowedChars = "0123456789abcdefghijklmnop";  // 允许的字符集合
+    // 生成8位密码，每位密码从allowedChars中随机选择一个字符
+    for (int i = 0; i < 8; i++) {
+        int randomIndex = rand() % allowedChars.length();  // 生成一个随机索引
+        password += allowedChars[randomIndex];  // 将随机选择的字符添加到密码末尾
     }
-    return password;
-}
-
-int main() {
-    std::string password;
-    std::cout << "Enter a password: ";
-    std::cin >> password;
-
-    std::string encryptedPassword = encrypt(password);
-    std::cout << "Encrypted password: " << encryptedPassword << std::endl;
-
-    std::string decryptedPassword = decrypt(encryptedPassword);
-    std::cout << "Decrypted password: " << decryptedPassword << std::endl;
-
-    bool isStrong = isStrongPassword(password);
-    std::cout << "Is password strong? " << (isStrong ? "Yes" : "No") << std::endl;
-
-    std::string generatedPassword = generatePassword();
-    std::cout << "Generated password: " << generatedPassword << std::endl;
-
-    return 0;
+    return password;  // 返回生成的密码
 }
