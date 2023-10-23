@@ -47,5 +47,6 @@ std::string generatePassword() {
         int randomIndex = rand() % allowedChars.length();  // 生成一个随机索引
         password += allowedChars[randomIndex];  // 将随机选择的字符添加到密码末尾
     }
-    return password;  // 返回生成的密码
+    return password;  // 返回生成的密码  加的东西
 }
+
